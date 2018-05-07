@@ -7,7 +7,7 @@ setup(
     author_email="davidmtn@gmail.com",
     packages=['awsLexAlexa', 'awsLexAlexa.events', 'awsLexAlexa.responses'],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
-    long_description=open('README.txt').read(),
+    long_description=open('README.md').read(),
     classifiers=[
         "Development Status :: 1 - Planning",
         "Topic :: Utilities",
