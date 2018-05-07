@@ -2,9 +2,29 @@
 
 This library may wrap the internal logistic between Amazon Lex or Alexa (Amazon echo) using AWS Lambda as background serverless.
 
-You can see the implementation in `lambda_function.py`
+You can see the implementation in `lambda_function.py`.
 
-**Compile:** 
+**Usage:**
+```python
+from awsLexAlexa.event_handler import EventHandler, LEX, ALEXA
+
+ev = EventHandler()
+
+@ev.handler_intent(intent='intent-name')
+def foo(event):
+    # TODO: Implement logic needly
+    return event.delegate_response() # optional
+...
+...
+
+def lambda_handler(event, context):
+    logger.debug('Request:\n {}'.format(event))
+    action = ev.execute(event)
+    logger.debug('Response:\n {}'.format(action))
+    return action
+```
+
+**Compile or download [precompiled file](dist):** 
 ```bash
 python setup.py sdist --formats=gztar,zip
 ```
