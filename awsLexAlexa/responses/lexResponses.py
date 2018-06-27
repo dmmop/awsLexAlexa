@@ -95,6 +95,7 @@ class LexResponse(LexEvent):
 
         return action
 
-    def end_response(self):
+    def end_response(self, msg, msg_type='PlainText'):
+        self.close_response(msg, msg_type)
         # TODO: Raise or close option
-        raise NotImplementedError('End response is not available for lex.')
+        # raise NotImplementedError('End response is not available for lex.')

@@ -42,7 +42,7 @@ class EventHandler:
         bot_platform = None
         try:
             # Check for alexa source
-            event['request']['type']
+            assert event['request']['type']
             bot_platform = ALEXA
             logger.debug('Alexa detected')
         except KeyError:
