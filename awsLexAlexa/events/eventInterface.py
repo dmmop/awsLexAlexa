@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 class _EventInterface:
     LEX = 'lex'
     ALEXA = 'alexa'
+    LOGGER_LEVEL_ATTRIBUTE = 'PublishLog'
+
+    # def __init__(self):
+    #     logger.setLevel(self.get_logger_level())
 
     def is_confirmed(self):
         status = False
@@ -53,6 +57,10 @@ class _EventInterface:
 
     def clear_sessionAttributes(self, default_value=None):
         self.sessionAttributes = self.clear_dictionary_values(self.sessionAttributes, default_value)
+
+    def get_logger_level(self):
+        isDebugging = self.get_sessionAttributes([self.LOGGER_LEVEL_ATTRIBUTE])
+        return logging.DEBUG if not isDebugging else logging.INFO  # FIXME: change in deploy (rm 'not' word)
 
     @staticmethod
     def _extract_value(self, keys: list, dict: dict = None):

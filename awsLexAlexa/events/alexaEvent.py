@@ -19,3 +19,5 @@ class AlexaEvent(_EventInterface):
         self.confirmationStatus = self._extract_value(['request', 'intent', 'confirmationStatus'])
         self.intentName = self._extract_value(['request', 'intent', 'name'])
         self.slots = self._extract_value(['request', 'intent', 'slots'])
+
+        # logger.setLevel(self.get_logger_level())

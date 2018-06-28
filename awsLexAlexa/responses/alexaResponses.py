@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class AlexaResponse(AlexaEvent):
+
     def delegate_response(self):
         """
         This response delegates Alexa to choose the next course of action based on the bot

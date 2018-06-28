@@ -32,3 +32,5 @@ class LexEvent(_EventInterface):
         self.inputTranscript = self._extract_value(['inputTranscript'])
         self.intentName = self._extract_value(['currentIntent', 'name'])
         self.slots = self._extract_value(['currentIntent', 'slots'])
+
+        # logger.setLevel(self.get_logger_level())
