@@ -156,23 +156,3 @@ class _EventInterface:
         else:
             new_dict = dictionary.fromkeys(dictionary, default_value)
         return new_dict
-
-    # @staticmethod
-    # def update_dict_value(dictionary: dict = None, key=None, value=None):
-    #     """
-    #
-    #     :param dictionary:
-    #     :param key:
-    #     :param value:
-    #     :return:
-    #     """
-    #     if dictionary is None:
-    #         logger.error('Any dictionary is required')
-    #         raise ValueError('Any dictionary is required')
-    #     elif key is None:
-    #         logger.error('\"key\" can not be None')
-    #         raise ValueError('\"key\" can not be None')
-    #     else:
-    #         new_dict = dictionary.copy()
-    #         new_dict[key] = value
-    #     return new_dict
