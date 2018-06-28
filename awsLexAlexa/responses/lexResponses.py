@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 class LexResponse(LexEvent):
     def delegate_response(self):
+        """"
+        This response delegate Lex to choose the next course of action based on the configuration.
+        """
         logger.debug('Delegate response.')
 
         action = {
@@ -25,6 +28,16 @@ class LexResponse(LexEvent):
                              reprompt_msg=None,
                              msg_type='PlainText',
                              reprompt_type='PlainText'):
+        """
+        This response inform Lex that there are incorrect slot value, and must be fill again.
+        :param elicit_slot: Slot with bad value.
+        :param msg: Message to be said to the user. It should be a string containing a text or SSML text,
+         depending on the value of de 'msg_type'.
+        :param msg_type: It indicate the output voice format. Its value should be either 'PlainText' or 'SSML'.
+        :param reprompt_msg: Slot for polymorphism with Alexa implementation.
+        :param reprompt_type: Slot for polymorphism with Alexa implementation.
+        :return: A json-formatted responses that agrees with Lex's API.
+        """
         logger.debug('Elicit slot response.')
         self.set_slot(key_name=elicit_slot, allowed_empty=True)
         action = {
@@ -41,11 +54,18 @@ class LexResponse(LexEvent):
         }
         return action
 
-    @staticmethod
-    def elicit_intent_response(msg,
+    def elicit_intent_response(self, msg,
                                reprompt_msg=None,
                                msg_type='PlainText',
                                reprompt_type='PlainText'):
+        """
+        :param msg: Message to be said to the user. It should be a string containing a text or SSML text,
+         depending on the value of de 'msg_type'.
+        :param msg_type: It indicate the output voice format. Its value should be either 'PlainText' or 'SSML'.
+        :param reprompt_msg: Slot for polymorphism with Alexa implementation.
+        :param reprompt_type: Slot for polymorphism with Alexa implementation.
+        :return: A json-formatted responses that agrees with Lex's API.
+        """
         logger.debug('Elicit Intent response.')
 
         action = {
@@ -78,7 +98,6 @@ class LexResponse(LexEvent):
         }
         return action
 
-    @staticmethod
     def close_response(msg, msg_type='PlainText', fulfilled=False):
         logger.debug('Close response.')
         fulfilled_state = 'Fulfilled' if fulfilled else 'Failed'

@@ -35,6 +35,9 @@ class _EventInterface:
             logger.error('"key_value" can not be None or must be "allowed_empty"')
             raise ValueError('"key_value" can not be None or must be "allowed_empty"')
 
+    def clear_slots(self, default_value=None):
+        self.slots = self.clear_dictionary_values(self.slots, default_value)
+
     def get_sessionAttributes(self, key: list = None):
         return self._extract_value(keys=key, dict=self.sessionAttributes)
 
@@ -48,6 +51,10 @@ class _EventInterface:
             logger.error('"key_value" can not be None or must be "allowed_empty"')
             raise ValueError('"key_value" can not be None or must be "allowed_empty"')
 
+    def clear_sessionAttributes(self, default_value=None):
+        self.sessionAttributes = self.clear_dictionary_values(self.sessionAttributes, default_value)
+
+    @staticmethod
     def _extract_value(self, keys: list, dict: dict = None):
         """Return a value inside a dictionary (dict) no matter the nested level.
 
@@ -88,8 +95,16 @@ class _EventInterface:
             return None
 
     @staticmethod
+    def clear_dictionary_values(dictionary: dict = None, default_value=None):
+        if dictionary is None:
+            logger.error('Any dictionary is required')
+            raise ValueError('Any dictionary is required')
+        else:
+            new_dict = dictionary.fromkeys(dictionary, default_value)
+        return new_dict
+
+    @staticmethod
     def update_dict_value(dictionary: dict = None, key=None, value=None):
-        new_dict = dictionary.copy()
         if dictionary is None:
             logger.error('Any dictionary is required')
             raise ValueError('Any dictionary is required')
@@ -97,5 +112,6 @@ class _EventInterface:
             logger.error('\"key\" can not be None')
             raise ValueError('\"key\" can not be None')
         else:
+            new_dict = dictionary.copy()
             new_dict[key] = value
         return new_dict
