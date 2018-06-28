@@ -96,7 +96,7 @@ class LexResponse:
         }
         return action
 
-    def close_response(msg, msg_type='PlainText', fulfilled=False):
+    def close_response(self, msg, msg_type='PlainText', fulfilled=False):
         logger.debug('Close response.')
         fulfilled_state = 'Fulfilled' if fulfilled else 'Failed'
         action = {

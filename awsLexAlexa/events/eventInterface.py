@@ -62,7 +62,6 @@ class _EventInterface:
         isDebugging = self.get_sessionAttributes([self.LOGGER_LEVEL_ATTRIBUTE])
         return logging.DEBUG if not isDebugging else logging.INFO  # FIXME: change in deploy (rm 'not' word)
 
-    @staticmethod
     def _extract_value(self, keys: list, dict: dict = None):
         """Return a value inside a dictionary (dict) no matter the nested level.
 
