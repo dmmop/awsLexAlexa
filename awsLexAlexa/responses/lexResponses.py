@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 
-class LexResponse(LexEvent):
+class LexResponse:
     def delegate_response(self):
         """"
         This response delegate Lex to choose the next course of action based on the configuration.

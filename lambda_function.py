@@ -1,10 +1,8 @@
 import logging
 import traceback
-from datetime import datetime
-
+from awsLexAlexa.event_handler import EventHandler, LEX, ALEXA
 import common_utils as cmu
-
-from awsLexAlexa.event_handler import EventHandler, LEX
+from datetime import datetime
 
 # Set up logging
 logger = logging.getLogger()
@@ -198,34 +196,6 @@ def delete_event(event):
     except:
         logger.error(traceback.format_exc())
 
-    return action
-
-
-@ev.handler_intent(intent='AMAZON.HelpIntent')
-def get_welcome_response(event):
-    # TODO: Update messages with desired ones
-    intro_msg = "Hi, this is the SKILL_NAME, what can I do for you?"
-    help_1_msg = "You can ask me for INTENT1, INTENT2 or INTENT3."
-    help_2_msg = '<speak><p>For INTENT1, say <prosody rate="x-slow">utterance1</prosody>.</p>' \
-                 '<p>For INTENT2, say <prosody rate="x-slow">utterance2</prosody>.</p>' \
-                 '<p>For INTENT3, say <prosody rate="x-slow">utterance3</prosody>.</p></speak>'
-    if event.get_sessionAttributes('new'):  # Called from on_launch
-        action = event.elicit_intent_response(msg=intro_msg,
-                                              reprompt_msg=help_1_msg)
-
-    else:  # Called when intent is AMAZON.HelpIntent
-        action = event.elicit_intent_response(msg=help_1_msg,
-                                              reprompt_msg=help_2_msg,
-                                              reprompt_type='SSML')
-    return action
-
-
-@ev.handler_intent(intent='AMAZON.CancelIntent')
-@ev.handler_intent(intent='AMAZON.StopIntent')
-def handle_session_end_request(event):
-    msg = "It was a pleasure to assist you, goodbye."
-    action = event.end_response(msg=msg)
-    # TODO: Add cleanup logic here if necessary
     return action
 
 

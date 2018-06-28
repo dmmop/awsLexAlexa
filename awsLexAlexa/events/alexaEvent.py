@@ -1,14 +1,14 @@
 import logging
 
 from awsLexAlexa.events.eventInterface import _EventInterface
-
+from awsLexAlexa.responses.alexaResponses import AlexaResponse
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
                     datefmt='%d/%m/%y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
 
-class AlexaEvent(_EventInterface):
+class AlexaEvent(_EventInterface, AlexaResponse):
     def __init__(self, event):
         super().__init__()
         self.event = event

@@ -1,7 +1,7 @@
 import logging
 
-from .responses.alexaResponses import AlexaResponse
-from .responses.lexResponses import LexResponse
+from .events.alexaEvent import AlexaEvent
+from .events.lexEvent import LexEvent
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
@@ -55,9 +55,9 @@ class EventHandler:
         if event:
             self.bot_platform = self.detect_bot_platform(event)
             if self.bot_platform == ALEXA:
-                self.event = AlexaResponse(event)
+                self.event = AlexaEvent(event)
             elif self.bot_platform == LEX:
-                self.event = LexResponse(event)
+                self.event = LexEvent(event)
             else:
                 raise KeyError('BotPlatform can not be detected')
         else:

@@ -1,6 +1,7 @@
 import logging
 
 from awsLexAlexa.events.eventInterface import _EventInterface
+from awsLexAlexa.responses.lexResponses import LexResponse
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
@@ -8,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 
-class LexEvent(_EventInterface):
+class LexEvent(_EventInterface, LexResponse):
     class _Bot:
         def __init__(self, event):
             self.name = event._extract_value(['bot', 'name'])

@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 
-class AlexaResponse(AlexaEvent):
+class AlexaResponse:
 
     def delegate_response(self):
         """
