@@ -11,52 +11,93 @@ class _EventInterface:
     ALEXA = 'alexa'
     LOGGER_LEVEL_ATTRIBUTE = 'PublishLog'
 
-    # def __init__(self):
-    #     logger.setLevel(self.get_logger_level())
-
     def is_confirmed(self):
+        """
+        Check if the event was confirmed by user
+        :return: True or False
+        """
         status = False
         if self.confirmationStatus:
             status = self.confirmationStatus.lower() == 'confirmed'
         return status
 
     def is_denied(self):
+        """
+        Check if the event have been rejected by user
+        :return: True or False
+        """
         status = False
         if self.confirmationStatus:
             status = self.confirmationStatus.lower() == 'denied'
         return status
 
     def get_slot(self, key: str = None):
+        """
+        Get value from slot dict and return it
+        :param key: Key name of value that you want retrieve
+        :return: The value if exists or None
+        """
         return self._extract_value(keys=[key], dict=self.slots)
 
-    def set_slot(self, key_name=None, key_value=None, allowed_empty=False):
-        if key_name and (key_value or allowed_empty):
+    def set_slot(self, key_name=None, key_value=None):
+        """
+        Set slot value given the key name. Set None by default,
+        :param key_name: Key name of the value that want to change
+        :param key_value: New value for that key
+        """
+        if key_name:
             self.slots[key_name] = key_value
-        elif key_name is None:
+        else:
             logger.error('"key_name" can not be None')
             raise ValueError('"key_name" can not be None')
-        elif key_value is None and not allowed_empty:
-            logger.error('"key_value" can not be None or must be "allowed_empty"')
-            raise ValueError('"key_value" can not be None or must be "allowed_empty"')
 
-    def clear_slots(self, default_value=None):
-        self.slots = self.clear_dictionary_values(self.slots, default_value)
+    def clear_slots(self):
+        """
+        Set all slots to None
+        """
+        self.slots = self.clear_dictionary_values(self.slots)
 
     def get_sessionAttributes(self, key: list = None):
+        """
+        Get value from session attributes dict and return it
+        :param key: Key name of value that you want retrieve
+        :return: The value if exists or None
+        """
         return self._extract_value(keys=key, dict=self.sessionAttributes)
 
-    def set_sessionAttributes(self, key_name=None, key_value=None, allowed_empty=False):
-        if key_name and (key_value or allowed_empty):
+    def set_sessionAttributes(self, key_name=None, key_value=None):
+        """
+        Set slot value given the key name. Set None by default
+        :param key_name: Key name of the value that want to change
+        :param key_value: New value for that key
+        """
+        if key_name:
             self.sessionAttributes[key_name] = key_value
-        elif key_name is None:
+        else:
             logger.error('"key_name" can not be None')
             raise ValueError('"key_name" can not be None')
-        elif key_value is None and allowed_empty:
-            logger.error('"key_value" can not be None or must be "allowed_empty"')
-            raise ValueError('"key_value" can not be None or must be "allowed_empty"')
 
-    def clear_sessionAttributes(self, default_value=None):
-        self.sessionAttributes = self.clear_dictionary_values(self.sessionAttributes, default_value)
+    def clear_sessionAttributes(self):
+        """
+        Set all session attributes to None
+        """
+        self.sessionAttributes = self.clear_dictionary_values(self.sessionAttributes)
+
+    def get_sessionAttribute_or_slot(self, key_name=None, prefer_slots=False):
+        """
+        Get a value searching first in session attributes and later in slot unless "prefer_slots" is activated.
+        :param key_name: Key name to retrieve.
+        :param prefer_slots: False default, True to prioritize slots over session attributes
+        :return: The value founded or None
+        """
+        value_session = self.get_sessionAttributes(key_name)
+        value_slot = self.get_slot(key_name)
+        if prefer_slots:
+            return_value = value_slot if value_slot else value_session
+        else:
+            return_value = value_session if value_session else value_slot
+
+        return return_value
 
     def get_logger_level(self):
         isDebugging = self.get_sessionAttributes([self.LOGGER_LEVEL_ATTRIBUTE])
@@ -103,6 +144,12 @@ class _EventInterface:
 
     @staticmethod
     def clear_dictionary_values(dictionary: dict = None, default_value=None):
+        """
+        Set all first level values to "default_value"
+        :param dictionary:  Dictionary to clear values
+        :param default_value: Value to set all keys from dict. Default None
+        :return: New dictionary with all value changes.
+        """
         if dictionary is None:
             logger.error('Any dictionary is required')
             raise ValueError('Any dictionary is required')
@@ -110,15 +157,22 @@ class _EventInterface:
             new_dict = dictionary.fromkeys(dictionary, default_value)
         return new_dict
 
-    @staticmethod
-    def update_dict_value(dictionary: dict = None, key=None, value=None):
-        if dictionary is None:
-            logger.error('Any dictionary is required')
-            raise ValueError('Any dictionary is required')
-        elif key is None:
-            logger.error('\"key\" can not be None')
-            raise ValueError('\"key\" can not be None')
-        else:
-            new_dict = dictionary.copy()
-            new_dict[key] = value
-        return new_dict
+    # @staticmethod
+    # def update_dict_value(dictionary: dict = None, key=None, value=None):
+    #     """
+    #
+    #     :param dictionary:
+    #     :param key:
+    #     :param value:
+    #     :return:
+    #     """
+    #     if dictionary is None:
+    #         logger.error('Any dictionary is required')
+    #         raise ValueError('Any dictionary is required')
+    #     elif key is None:
+    #         logger.error('\"key\" can not be None')
+    #         raise ValueError('\"key\" can not be None')
+    #     else:
+    #         new_dict = dictionary.copy()
+    #         new_dict[key] = value
+    #     return new_dict
