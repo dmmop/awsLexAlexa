@@ -80,7 +80,7 @@ class AlexaEvent(_EventInterface):
         logger.debug('ElicitSlot response with msg: "{}" and elicit slot: "{}"'
                      .format(msg, elicit_slot))
 
-        self.set_slot(key_name=elicit_slot, allowed_empty=True)
+        self.set_slot(key_name=elicit_slot)
 
         directive = {
             "type": "Dialog.ElicitSlot",

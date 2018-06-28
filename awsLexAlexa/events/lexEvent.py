@@ -65,7 +65,7 @@ class LexEvent(_EventInterface):
         :return: A json-formatted responses that agrees with Lex's API.
         """
         logger.debug('Elicit slot response.')
-        self.set_slot(key_name=elicit_slot, allowed_empty=True)
+        self.set_slot(key_name=elicit_slot)
         action = {
             "dialogAction": {
                 "type": "ElicitSlot",
