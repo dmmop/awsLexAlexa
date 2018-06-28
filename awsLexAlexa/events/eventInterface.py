@@ -99,7 +99,28 @@ class _EventInterface:
 
         return return_value
 
+    def increment_counter(self, counter_name):
+        """
+        Search in session attributes for a counter with the "counter_name" as key, if does not exist
+        add the key with value 1 and return the new value of counter.
+        :param counter_name: The name of the counter saved in session attributes
+        :return: The new value of that counter
+        """
+        counter_value = self.get_sessionAttributes(counter_name)
+        counter_value = int(counter_value) + 1 if counter_value else 1
+        self.set_sessionAttributes(counter_name)
+        return self.get_sessionAttributes(counter_name)
+
+    def get_counter_value(self, counter_name):
+        """
+        Wrapper method of "get_sessionAttributes" that return the value of some counter
+        :param counter_name:  The name of the counter saved in session attributes
+        :return: The value of the counter
+        """
+        return self.get_sessionAttributes(counter_name)
+
     def get_logger_level(self):
+        # TODO: Search for better implementation
         isDebugging = self.get_sessionAttributes([self.LOGGER_LEVEL_ATTRIBUTE])
         return logging.DEBUG if not isDebugging else logging.INFO  # FIXME: change in deploy (rm 'not' word)
 
