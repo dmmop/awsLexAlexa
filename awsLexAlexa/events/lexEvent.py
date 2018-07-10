@@ -67,6 +67,7 @@ class LexEvent(_EventInterface):
         logger.debug('Elicit slot response.')
         self.set_slot(key_name=elicit_slot)
         action = {
+            "sessionAttributes": self.sessionAttributes,
             "dialogAction": {
                 "type": "ElicitSlot",
                 "message": {
@@ -95,6 +96,7 @@ class LexEvent(_EventInterface):
         logger.debug('Elicit Intent response.')
 
         action = {
+            "sessionAttributes": self.sessionAttributes,
             "dialogAction": {
                 "type": "ElicitIntent",
                 "message": {
@@ -128,6 +130,7 @@ class LexEvent(_EventInterface):
         logger.debug('Close response.')
         fulfilled_state = 'Fulfilled' if fulfilled else 'Failed'
         action = {
+            "sessionAttributes": self.sessionAttributes,
             "dialogAction": {
                 "type": "Close",
                 "fulfillmentState": fulfilled_state,
