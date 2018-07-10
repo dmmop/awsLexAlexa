@@ -73,6 +73,7 @@ class LexEvent(_EventInterface):
                     "contentType": msg_type,
                     "content": msg
                 },
+                "sessionAttributes": self.sessionAttributes,
                 "intentName": self.intentName,
                 "slots": self.slots,
                 "slotToElicit": elicit_slot
@@ -95,6 +96,7 @@ class LexEvent(_EventInterface):
         logger.debug('Elicit Intent response.')
 
         action = {
+            "sessionAttributes": self.sessionAttributes,
             "dialogAction": {
                 "type": "ElicitIntent",
                 "message": {
@@ -128,6 +130,7 @@ class LexEvent(_EventInterface):
         logger.debug('Close response.')
         fulfilled_state = 'Fulfilled' if fulfilled else 'Failed'
         action = {
+            "sessionAttributes": self.sessionAttributes,
             "dialogAction": {
                 "type": "Close",
                 "fulfillmentState": fulfilled_state,
