@@ -6,10 +6,11 @@ from .events.lexEvent import LexEvent
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
                     datefmt='%d/%m/%y %H:%M:%S')
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("awsLexAlexa")
 
 LEX = 'lex'
 ALEXA = 'alexa'
+LOGS_ATTRIBUTE = "PublishLogs"
 
 
 class EventHandler:
@@ -62,6 +63,11 @@ class EventHandler:
                 raise KeyError('BotPlatform can not be detected')
         else:
             raise ValueError('"Event" need to be specificated')
+
+        if self.event.get_sessionAttributes([LOGS_ATTRIBUTE]):
+            logger.setLevel(logging.DEBUG)
+        else:
+            logger.setLevel(logging.INFO)
 
         intent_name = self.event.intentName
         if intent_name in self.handler_intent:
