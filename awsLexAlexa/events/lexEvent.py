@@ -121,7 +121,7 @@ class LexEvent(_EventInterface):
                 "message": {
                     "contentType": msg_type,
                     "content": msg
-                },
+                }
             }
         }
         return action
