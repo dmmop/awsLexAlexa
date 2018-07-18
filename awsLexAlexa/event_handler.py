@@ -3,7 +3,7 @@ import logging
 from .events.alexaEvent import AlexaEvent
 from .events.lexEvent import LexEvent
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
                     datefmt='%d/%m/%y %H:%M:%S')
 logger = logging.getLogger("awsLexAlexa")
@@ -11,6 +11,7 @@ logger = logging.getLogger("awsLexAlexa")
 LEX = 'lex'
 ALEXA = 'alexa'
 LOGS_ATTRIBUTE = "PublishLogs"
+DEFAULT_INTENT = "default"
 
 
 class EventHandler:
@@ -38,6 +39,16 @@ class EventHandler:
 
         return wrapper
 
+    def default_intent(self):
+        def wrapper(function):
+            self.handler_intent[DEFAULT_INTENT] = function
+
+        return wrapper
+
+    @staticmethod
+    def set_log_level(log_level):
+        logger.setLevel(log_level)
+
     @staticmethod
     def detect_bot_platform(event):
         bot_platform = None
@@ -53,6 +64,7 @@ class EventHandler:
         return bot_platform
 
     def execute(self, event: dict = None):
+        # First detect the bot platform source like Lex or Alexa
         if event:
             self.bot_platform = self.detect_bot_platform(event)
             if self.bot_platform == ALEXA:
@@ -64,14 +76,17 @@ class EventHandler:
         else:
             raise ValueError('"Event" need to be specificated')
 
+        # Check if there are any sessionAttribute with "PublishLogs" key
         if self.event.get_sessionAttributes([LOGS_ATTRIBUTE]):
             logger.setLevel(logging.DEBUG)
-        else:
-            logger.setLevel(logging.INFO)
 
         intent_name = self.event.intentName
         if intent_name in self.handler_intent:
             response = self.handler_intent[intent_name](self.event)
+
+        elif DEFAULT_INTENT in self.handler_intent:
+            response = self.handler_intent[DEFAULT_INTENT](self.event)
+
         else:
             logger.error(self.handler_intent)
             raise NotImplementedError('There are not function for {} intent'.format(intent_name))
