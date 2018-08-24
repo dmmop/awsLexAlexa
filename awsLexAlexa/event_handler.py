@@ -3,10 +3,23 @@ import logging
 from .events.alexaEvent import AlexaEvent
 from .events.lexEvent import LexEvent
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
-                    datefmt='%d/%m/%y %H:%M:%S')
-logger = logging.getLogger("awsLexAlexa")
+
+# logging.basicConfig(level=logging.INFO,
+#                     format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
+#                     datefmt='%d/%m/%y %H:%M:%S')
+# logger = logging.getLogger("awsLexAlexa")
+
+
+def get_logger():
+    logger = logging.getLogger("awsLexAlexa.handler")
+    syslog = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s:%(levelname)s: %(message)s', "%d/%m/%y %H:%M:%S")
+    syslog.setFormatter(formatter)
+    logger.setLevel(logging.INFO)
+    logger.addHandler(syslog)
+
+
+logger = get_logger()
 
 LEX = 'lex'
 ALEXA = 'alexa'
@@ -80,10 +93,12 @@ class EventHandler:
         if self.event.get_sessionAttributes([LOGS_ATTRIBUTE]):
             logger.setLevel(logging.DEBUG)
 
+        # Execute intent logic
         intent_name = self.event.intentName
         if intent_name in self.handler_intent:
             response = self.handler_intent[intent_name](self.event)
 
+        # Check if default handler exists
         elif DEFAULT_INTENT in self.handler_intent:
             response = self.handler_intent[DEFAULT_INTENT](self.event)
 

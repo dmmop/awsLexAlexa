@@ -2,7 +2,7 @@ import logging
 
 from awsLexAlexa.events.eventInterface import _EventInterface
 
-logger = logging.getLogger("awsLexAlexa")
+logger = logging.getLogger("awsLexAlexa.lex")
 
 
 class LexEvent(_EventInterface):
@@ -123,7 +123,7 @@ class LexEvent(_EventInterface):
         }
         return action
 
-    def close_response(self, msg, msg_type='PlainText', fulfilled=False):
+    def close_response(self, msg, msg_type='PlainText', fulfilled=True):
         logger.debug('Close response.')
         fulfilled_state = 'Fulfilled' if fulfilled else 'Failed'
         action = {

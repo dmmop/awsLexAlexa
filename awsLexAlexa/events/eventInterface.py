@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger("awsLexAlexa")
+logger = logging.getLogger("awsLexAlexa.interface")
 
 
 class _EventInterface:

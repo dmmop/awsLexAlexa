@@ -2,7 +2,7 @@ import logging
 
 from awsLexAlexa.events.eventInterface import _EventInterface
 
-logger = logging.getLogger("awsLexAlexa")
+logger = logging.getLogger("awsLexAlexa.alexa")
 
 
 class AlexaEvent(_EventInterface):
