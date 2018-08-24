@@ -4,11 +4,6 @@ from .events.alexaEvent import AlexaEvent
 from .events.lexEvent import LexEvent
 
 
-# logging.basicConfig(level=logging.INFO,
-#                     format='%(asctime)s - %(name)s:%(levelname)s: %(message)s',
-#                     datefmt='%d/%m/%y %H:%M:%S')
-# logger = logging.getLogger("awsLexAlexa")
-
 class ContextFilter(logging.Filter):
     """
     This is a filter which injects contextual information into the log.
@@ -19,7 +14,7 @@ class ContextFilter(logging.Filter):
 
     def __init__(self):
         super().__init__()
-        self.userId = ""
+        self.userId = "UnknownId"
 
     def filter(self, record):
         record.userId = self.userId
@@ -29,7 +24,8 @@ class ContextFilter(logging.Filter):
 def config_logger():
     logger = logging.getLogger("awsLexAlexa")
     syslog = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - [%(levelname)-s] %(name)s: %(userId)s - %(message)s', "%d/%m/%y %H:%M:%S")
+    formatter = logging.Formatter('%(asctime)s - [%(levelname)-s] %(name)s: %(userId)s - %(message)s',
+                                  "%d/%m/%y %H:%M:%S")
     syslog.setFormatter(formatter)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(syslog)
@@ -119,7 +115,7 @@ class EventHandler:
                     if isinstance(filter, ContextFilter):
                         filter.userId = self.event.userId
 
-                        # Execute intent logic
+        # Execute intent logic
         intent_name = self.event.intentName
         if intent_name in self.handler_intent:
             response = self.handler_intent[intent_name](self.event)
