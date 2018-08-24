@@ -9,17 +9,36 @@ from .events.lexEvent import LexEvent
 #                     datefmt='%d/%m/%y %H:%M:%S')
 # logger = logging.getLogger("awsLexAlexa")
 
+class ContextFilter(logging.Filter):
+    """
+    This is a filter which injects contextual information into the log.
 
-def get_logger():
-    logger = logging.getLogger("awsLexAlexa.handler")
+    Rather than use actual contextual information, we just use random
+    data in this demo.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.userId = ""
+
+    def filter(self, record):
+        record.userId = self.userId
+        return True
+
+
+def config_logger():
+    logger = logging.getLogger("awsLexAlexa")
     syslog = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s:%(levelname)s: %(message)s', "%d/%m/%y %H:%M:%S")
+    formatter = logging.Formatter('%(asctime)s - [%(levelname)-s] %(name)s: %(userId)s - %(message)s', "%d/%m/%y %H:%M:%S")
     syslog.setFormatter(formatter)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(syslog)
+    syslog.addFilter(ContextFilter())
 
 
-logger = get_logger()
+config_logger()
+
+logger = logging.getLogger("awsLexAlexa.Handler")
 
 LEX = 'lex'
 ALEXA = 'alexa'
@@ -60,7 +79,7 @@ class EventHandler:
 
     @staticmethod
     def set_log_level(log_level):
-        logger.setLevel(log_level)
+        logging.getLogger("awsLexAlexa").setLevel(log_level)
 
     @staticmethod
     def detect_bot_platform(event):
@@ -91,9 +110,16 @@ class EventHandler:
 
         # Check if there are any sessionAttribute with "PublishLogs" key
         if self.event.get_sessionAttributes([LOGS_ATTRIBUTE]):
-            logger.setLevel(logging.DEBUG)
+            logging.getLogger("awsLexAlexa").setLevel(logging.DEBUG)
 
-        # Execute intent logic
+        # Add userID to log trace
+        if self.event.userId:
+            for handler in logging.getLogger("awsLexAlexa").handlers:
+                for filter in handler.filters:
+                    if isinstance(filter, ContextFilter):
+                        filter.userId = self.event.userId
+
+                        # Execute intent logic
         intent_name = self.event.intentName
         if intent_name in self.handler_intent:
             response = self.handler_intent[intent_name](self.event)
