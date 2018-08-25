@@ -1,3 +1,4 @@
+import json
 import logging
 
 from awsLexAlexa.events.eventInterface import _EventInterface
@@ -36,7 +37,6 @@ class LexEvent(_EventInterface):
         """"
         This response delegate Lex to choose the next course of action based on the configuration.
         """
-        logger.debug('Delegate response.')
 
         action = {
             "sessionAttributes": self.sessionAttributes,
@@ -45,6 +45,7 @@ class LexEvent(_EventInterface):
                 "slots": self.slots,
             }
         }
+        logger.info('Delegate response ->\n{}'.format(json.dumps(action)))
         return action
 
     def elicit_slot_response(self, elicit_slot, msg,
@@ -61,7 +62,6 @@ class LexEvent(_EventInterface):
         :param reprompt_type: Slot for polymorphism with Alexa implementation.
         :return: A json-formatted responses that agrees with Lex's API.
         """
-        logger.debug('Elicit slot response.')
         self.set_slot(key_name=elicit_slot)
         action = {
             "sessionAttributes": self.sessionAttributes,
@@ -76,6 +76,7 @@ class LexEvent(_EventInterface):
                 "slotToElicit": elicit_slot
             }
         }
+        logger.info('ElicitSlot response ->\n{}'.format(json.dumps(action)))
         return action
 
     def elicit_intent_response(self, msg,
@@ -90,7 +91,6 @@ class LexEvent(_EventInterface):
         :param reprompt_type: Slot for polymorphism with Alexa implementation.
         :return: A json-formatted responses that agrees with Lex's API.
         """
-        logger.debug('Elicit Intent response.')
 
         action = {
             "sessionAttributes": self.sessionAttributes,
@@ -102,13 +102,13 @@ class LexEvent(_EventInterface):
                 }
             }
         }
+        logger.info('ElicitIntent response ->\n{}'.format(json.dumps(action)))
         return action
 
     def confirm_intent_response(self, msg,
                                 reprompt_msg=None,
                                 msg_type='PlainText',
                                 reprompt_type='PlainText'):
-        logger.debug('Confirm Intent response.')
         action = {
             "sessionAttributes": self.sessionAttributes,
             "dialogAction": {
@@ -121,10 +121,10 @@ class LexEvent(_EventInterface):
                 }
             }
         }
+        logger.info('ConfirmIntent response ->\n{}'.format(json.dumps(action)))
         return action
 
     def close_response(self, msg, msg_type='PlainText', fulfilled=True):
-        logger.debug('Close response.')
         fulfilled_state = 'Fulfilled' if fulfilled else 'Failed'
         action = {
             "sessionAttributes": self.sessionAttributes,
@@ -137,6 +137,7 @@ class LexEvent(_EventInterface):
                 }
             }
         }
+        logger.info('Close response ->\n{}'.format(json.dumps(action)))
 
         return action
 

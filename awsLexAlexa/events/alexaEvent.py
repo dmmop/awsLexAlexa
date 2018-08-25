@@ -1,3 +1,4 @@
+import json
 import logging
 
 from awsLexAlexa.events.eventInterface import _EventInterface
@@ -17,8 +18,6 @@ class AlexaEvent(_EventInterface):
         self.intentName = self._extract_value(['request', 'intent', 'name'])
         self.slots = self._extract_value(['request', 'intent', 'slots'])
 
-        # logger.setLevel(self.get_logger_level())
-
     def delegate_response(self):
         """
         This response delegates Alexa to choose the next course of action based on the bot
@@ -31,7 +30,6 @@ class AlexaEvent(_EventInterface):
         dictionary to this parameter.
         :return: A json-formatted response that agrees with Alexa's conversational model.
         """
-        logger.debug('Delegate response.')
 
         directive = {"type": "Dialog.Delegate",
                      "updatedIntent": {
@@ -46,7 +44,7 @@ class AlexaEvent(_EventInterface):
             'sessionAttributes': self.sessionAttributes,
             'response': {'directives': [directive]}
         }
-
+        logger.info('Delegate response ->\n{}'.format(json.dumps(action)))
         return action
 
     def elicit_slot_response(self, elicit_slot, msg,
@@ -74,9 +72,6 @@ class AlexaEvent(_EventInterface):
         dictionary to this parameter.
         :return: A json-formatted response that agrees with Alexa's conversational model.
         """
-        logger.debug('ElicitSlot response with msg: "{}" and elicit slot: "{}"'
-                     .format(msg, elicit_slot))
-
         self.set_slot(key_name=elicit_slot)
 
         directive = {
@@ -94,6 +89,7 @@ class AlexaEvent(_EventInterface):
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type,
                                      directives=[directive])
+        logger.info('ElicitSlot response ->\n{}'.format(json.dumps(action)))
         return action
 
     def elicit_intent_response(self, msg, reprompt_msg,
@@ -115,12 +111,12 @@ class AlexaEvent(_EventInterface):
         dictionary to this parameter.
         :return: A json-formatted response that agrees with Alexa's conversational model.
         """
-        logger.debug('ElicitIntent response with msg: "{}"'.format(msg))
 
         action = self.build_response(msg=msg,
                                      msg_type=msg_type,
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type)
+        logger.info('ElicitIntent response ->\n{}'.format(json.dumps(action)))
         return action
 
     def confirm_intent_response(self, msg, reprompt_msg,
@@ -146,7 +142,6 @@ class AlexaEvent(_EventInterface):
         dictionary to this parameter.
         :return: A json-formatted response that agrees with Alexa's conversational model.
         """
-        logger.debug('ConfirmIntent response with msg: "{}"'.format(msg))
 
         directive = {
             "type": "Dialog.ConfirmIntent",
@@ -162,6 +157,7 @@ class AlexaEvent(_EventInterface):
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type,
                                      directives=[directive])
+        logger.info('ConfirmIntent response ->\n{}'.format(json.dumps(action)))
         return action
 
     def close_response(self, msg,
@@ -186,13 +182,13 @@ class AlexaEvent(_EventInterface):
         dictionary to this parameter.
         :return: A json-formatted response that agrees with Alexa's conversational model.
         """
-        logger.debug('Close response with msg: "{}"'.format(msg))
 
         action = self.build_response(msg=msg,
                                      msg_type=msg_type,
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type,
                                      should_end_session=False)
+        logger.info('Close response ->\n{}'.format(json.dumps(action)))
         return action
 
     def end_response(self, msg, msg_type='PlainText'):
@@ -207,12 +203,12 @@ class AlexaEvent(_EventInterface):
         dictionary to this parameter.
         :return: A json-formatted response that agrees with Alexa's conversational model.
         """
-        logger.debug('End response with msg: "{}"'.format(msg))
 
         action = self.build_response(msg=msg,
                                      msg_type=msg_type,
                                      should_end_session=True)
 
+        logger.info('End response ->\n{}'.format(json.dumps(action)))
         return action
 
     def build_response(self, msg="",

@@ -24,17 +24,17 @@ class ContextFilter(logging.Filter):
 def config_logger():
     logger = logging.getLogger("awsLexAlexa")
     syslog = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - [%(levelname)-s] %(name)s: %(userId)s - %(message)s',
+    formatter = logging.Formatter('[%(asctime)-17s] [%(levelname)-7s] [%(name)-21s] %(userId)-32s - %(message)s',
                                   "%d/%m/%y %H:%M:%S")
     syslog.setFormatter(formatter)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.addHandler(syslog)
     syslog.addFilter(ContextFilter())
 
 
 config_logger()
 
-logger = logging.getLogger("awsLexAlexa.Handler")
+logger = logging.getLogger("awsLexAlexa.handler")
 
 LEX = 'lex'
 ALEXA = 'alexa'
