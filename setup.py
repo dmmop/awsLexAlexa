@@ -1,16 +1,22 @@
-from distutils.core import setup
+import setuptools
 
-setup(
-    name='AWSLexAlexa',
-    version='0.1dev',
+setuptools.setup(
+    name='awsLexAlexa',
+    version='0.6',
     author="David Martinez Martin",
     author_email="davidmtn@gmail.com",
-    packages=['awsLexAlexa', 'awsLexAlexa.events', 'awsLexAlexa.responses'],
-    license='Creative Commons Attribution-Noncommercial-Share Alike license',
+    url="https://github.com/dmmop/awsLexAlexa",
+    packages=['awsLexAlexa/events', 'awsLexAlexa/logs'],
+    exclude=['test'],
+    # include_package_data=True,
+    license='GNU General Public License v3',
     long_description=open('README.md').read(),
+    long_description_content_type="text/markdown",
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Programming Language :: Python :: 3",
+        "Development Status :: 5 - Production/Stable",
         "Topic :: Utilities",
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: OS Independent",
     ],
 )

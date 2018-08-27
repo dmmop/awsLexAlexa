@@ -44,7 +44,7 @@ class AlexaEvent(_EventInterface):
             'sessionAttributes': self.sessionAttributes,
             'response': {'directives': [directive]}
         }
-        logger.info('Delegate response ->\n{}'.format(json.dumps(action)))
+        logger.info('Delegate response ->\r{}'.format(json.dumps(action)))
         return action
 
     def elicit_slot_response(self, elicit_slot, msg,
@@ -89,7 +89,7 @@ class AlexaEvent(_EventInterface):
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type,
                                      directives=[directive])
-        logger.info('ElicitSlot response ->\n{}'.format(json.dumps(action)))
+        logger.info('ElicitSlot response ->\r{}'.format(json.dumps(action)))
         return action
 
     def elicit_intent_response(self, msg, reprompt_msg,
@@ -116,7 +116,7 @@ class AlexaEvent(_EventInterface):
                                      msg_type=msg_type,
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type)
-        logger.info('ElicitIntent response ->\n{}'.format(json.dumps(action)))
+        logger.info('ElicitIntent response ->\r{}'.format(json.dumps(action)))
         return action
 
     def confirm_intent_response(self, msg, reprompt_msg,
@@ -157,7 +157,7 @@ class AlexaEvent(_EventInterface):
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type,
                                      directives=[directive])
-        logger.info('ConfirmIntent response ->\n{}'.format(json.dumps(action)))
+        logger.info('ConfirmIntent response ->\r{}'.format(json.dumps(action)))
         return action
 
     def close_response(self, msg,
@@ -188,7 +188,7 @@ class AlexaEvent(_EventInterface):
                                      reprompt_msg=reprompt_msg,
                                      reprompt_type=reprompt_type,
                                      should_end_session=False)
-        logger.info('Close response ->\n{}'.format(json.dumps(action)))
+        logger.info('Close response ->\r{}'.format(json.dumps(action)))
         return action
 
     def end_response(self, msg, msg_type='PlainText'):
@@ -208,7 +208,7 @@ class AlexaEvent(_EventInterface):
                                      msg_type=msg_type,
                                      should_end_session=True)
 
-        logger.info('End response ->\n{}'.format(json.dumps(action)))
+        logger.info('End response ->\r{}'.format(json.dumps(action)))
         return action
 
     def build_response(self, msg="",

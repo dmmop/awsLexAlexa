@@ -20,6 +20,7 @@ class UserIdFilter(logging.Filter):
 
 def get_configured_logger(parent):
     logger = logging.getLogger(parent)
+    logger.propagate = False  # duplicated messages in cloudwatch
     formatter = logging.Formatter('[%(asctime)-17s] [%(levelname)-7s] [%(name)-21s] %(userId)-32s - %(message)s',
                                   "%d/%m/%y %H:%M:%S")
     handler = logging.StreamHandler()
