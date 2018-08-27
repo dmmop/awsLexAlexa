@@ -9,10 +9,11 @@ You can see the implementation in `lambda_function.py`.
 from awsLexAlexa.event_handler import EventHandler, LEX, ALEXA
 
 ev = EventHandler()
+logger = ev.get_configured_logger("mi_app_name")
 
 @ev.handler_intent(intent='intent-name')
 def foo(event):
-    # TODO: Implement logic needly
+    # TODO: Implement logic required
     return event.delegate_response() # optional
 ...
 ...
