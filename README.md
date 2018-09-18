@@ -4,17 +4,31 @@ This library may wrap the internal logistic between Amazon Lex or Alexa (Amazon 
 
 You can see the implementation in `lambda_function.py`.
 
+**Install**
+```bash
+pip install AwsLexAlexa -t .
+```
+
 **Usage:**
 ```python
 from awsLexAlexa.event_handler import EventHandler, LEX, ALEXA
 
 ev = EventHandler()
+
+# Get logger with UserId included in log message: 
 logger = ev.get_configured_logger("mi_app_name")
 
 @ev.handler_intent(intent='intent-name')
 def foo(event):
     # TODO: Implement logic required
-    return event.delegate_response() # optional
+    return event.delegate_response()
+
+@ev.default_intent()
+def default(event):
+    # TODO: Implement logic required
+    # Other intents which function have not be specified
+    return event.delegate_response()
+
 ...
 ...
 
@@ -24,17 +38,3 @@ def lambda_handler(event, context):
     logger.debug('Response:\n {}'.format(action))
     return action
 ```
-
-**Compile or download [precompiled file](dist):** 
-```bash
-python setup.py sdist --formats=gztar,zip
-```
-**Install**: 
-```bash
-python setup.py install --record files_aws.txt
-```
-**Uninstall**: 
-```bash
-cat files_aws.txt | xargs sudo rm -rf
-```
-
