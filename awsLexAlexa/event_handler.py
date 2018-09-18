@@ -10,8 +10,9 @@ logger = logging.getLogger("awsLexAlexa.handler")
 
 LEX = 'lex'
 ALEXA = 'alexa'
-LOGS_ATTRIBUTE = "PublishLogs"
 DEFAULT_INTENT = "default"
+
+__all__ = ["EventHandler", "LEX", "ALEXA"]
 
 
 class EventHandler:
@@ -89,10 +90,6 @@ class EventHandler:
                 raise KeyError('BotPlatform can not be detected')
         else:
             raise ValueError('"Event" need to be specificated')
-
-        # Check if there are any sessionAttribute with "PublishLogs" key
-        if self.event.get_sessionAttributes([LOGS_ATTRIBUTE]):
-            logging.getLogger("awsLexAlexa").setLevel(logging.DEBUG)
 
         # Add userID to log trace
         if self.event.userId:

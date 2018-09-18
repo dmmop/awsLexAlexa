@@ -8,6 +8,12 @@ class _EventInterface:
     ALEXA = 'alexa'
     LOGGER_LEVEL_ATTRIBUTE = 'PublishLog'
 
+    class Slots():
+        pass
+
+    class SessionAttributes():
+        pass
+
     def is_confirmed(self):
         """
         Check if the event was confirmed by user
@@ -28,13 +34,13 @@ class _EventInterface:
             status = self.confirmationStatus.lower() == 'denied'
         return status
 
-    def get_slot(self, key: str = None):
+    def get_slot(self, key: str = None, ):
         """
         Get value from slot dict and return it
         :param key: Key name of value that you want retrieve
         :return: The value if exists or None
         """
-        return self._extract_value(keys=[key], dict=self.slots)
+        return self.slots.__getattribute__(key)
 
     def set_slot(self, key_name=None, key_value=None):
         """
@@ -43,7 +49,8 @@ class _EventInterface:
         :param key_value: New value for that key
         """
         if key_name:
-            self.slots[key_name] = key_value
+            # self.slots[key_name] = key_value
+            self.slots.__setattr__(key_name, key_value)
         else:
             logger.error('"key_name" can not be None')
             raise ValueError('"key_name" can not be None')
@@ -52,15 +59,18 @@ class _EventInterface:
         """
         Set all slots to None
         """
-        self.slots = self.clear_dictionary_values(self.slots)
+        # self.slots = self.clear_dictionary_values(self.slots)
+        for attr in self.slots.__dir__():
+            if not attr.startswith("_"):
+                self.slots.__setattr__(attr, None)
 
-    def get_sessionAttributes(self, key: list = None):
+    def get_sessionAttributes(self, key: str = None):
         """
         Get value from session attributes dict and return it
         :param key: Key name of value that you want retrieve
         :return: The value if exists or None
         """
-        return self._extract_value(keys=key, dict=self.sessionAttributes)
+        return self.sessionAttributes.__getattribute__(key)
 
     def set_sessionAttributes(self, key_name=None, key_value=None):
         """
@@ -69,7 +79,8 @@ class _EventInterface:
         :param key_value: New value for that key
         """
         if key_name:
-            self.sessionAttributes[key_name] = key_value
+            # self.sessionAttributes[key_name] = key_value
+            self.sessionAttributes.__setattr__(key_name, key_value)
         else:
             logger.error('"key_name" can not be None')
             raise ValueError('"key_name" can not be None')
@@ -78,7 +89,10 @@ class _EventInterface:
         """
         Set all session attributes to None
         """
-        self.sessionAttributes = self.clear_dictionary_values(self.sessionAttributes)
+        # self.sessionAttributes = self.clear_dictionary_values(self.sessionAttributes)
+        for attr in self.sessionAttributes.__dir__():
+            if not attr.startswith("_"):
+                self.sessionAttributes.__setattr__(attr, None)
 
     def get_sessionAttribute_or_slot(self, key_name=None, prefer_slots=False):
         """

@@ -13,10 +13,19 @@ class AlexaEvent(_EventInterface):
         self.alexa_help_mgs = None
 
         self.bot_platform = super().LEX
-        self.sessionAttributes = self._extract_value(['session', 'attributes'])
         self.confirmationStatus = self._extract_value(['request', 'intent', 'confirmationStatus'])
         self.intentName = self._extract_value(['request', 'intent', 'name'])
-        self.slots = self._extract_value(['request', 'intent', 'slots'])
+        # self.sessionAttributes = self._extract_value(['session', 'attributes'])
+        # self.slots = self._extract_value(['request', 'intent', 'slots'])
+        self.slots = self.Slots()
+        if self._extract_value(['request', 'intent', 'slots']):
+            for key, value in self._extract_value(['request', 'intent', 'slots']).items():
+                self.slots.__setattr__(key, value)
+
+        self.sessionAttributes = self.SessionAttributes()
+        if self._extract_value(['session', 'attributes']):
+            for key, value in self._extract_value(['session', 'attributes']):
+                self.slots.__setattr__(key, value)
 
     def delegate_response(self):
         """
@@ -35,13 +44,13 @@ class AlexaEvent(_EventInterface):
                      "updatedIntent": {
                          "name": self.intentName,
                          "confirmationStatus": "NONE",
-                         "slots": self.slots
+                         "slots": self.slots.__dict__
                      }
                      }
 
         action = {
             'version': '1.0',
-            'sessionAttributes': self.sessionAttributes,
+            'sessionAttributes': self.sessionAttributes.__dict__,
             'response': {'directives': [directive]}
         }
         logger.info('Delegate response ->\r{}'.format(json.dumps(action)))
@@ -80,7 +89,7 @@ class AlexaEvent(_EventInterface):
             "updatedIntent": {
                 "name": self.intentName,
                 "confirmationStatus": "NONE",
-                "slots": self.slots
+                "slots": self.slots.__dict__
             }
         }
 
@@ -148,7 +157,7 @@ class AlexaEvent(_EventInterface):
             "updatedIntent": {
                 "name": self.intentName,
                 "confirmationStatus": "NONE",
-                "slots": self.slots
+                "slots": self.slots.__dict__
             }
         }
 
@@ -269,7 +278,7 @@ class AlexaEvent(_EventInterface):
 
         action = {
             'version': '1.0',
-            'sessionAttributes': self.sessionAttributes,
+            'sessionAttributes': self.sessionAttributes.__dict__,
             'response': response
         }
 

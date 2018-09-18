@@ -22,14 +22,22 @@ class LexEvent(_EventInterface):
         self.messageVersion = self._extract_value(['messageVersion'])
         self.invocationSource = self._extract_value(['invocationSource'])
         self.userId = self._extract_value(['userId'])
-        self.sessionAttributes = self._extract_value(['sessionAttributes'])
         self.requestAttributes = self._extract_value(['requestAttributes'])
         self.bot = self._Bot(self)
         self.outputDialogMode = self._extract_value(['outputDialogMode'])
         self.confirmationStatus = self._extract_value(['currentIntent', 'confirmationStatus'])
         self.inputTranscript = self._extract_value(['inputTranscript'])
         self.intentName = self._extract_value(['currentIntent', 'name'])
-        self.slots = self._extract_value(['currentIntent', 'slots'])
+
+        self.slots = self.Slots()
+        if self._extract_value(['currentIntent', 'slots']):
+            for key, value in self._extract_value(['currentIntent', 'slots']).items():
+                self.slots.__setattr__(key, value)
+
+        self.sessionAttributes = self.SessionAttributes()
+        if self._extract_value(['sessionAttributes']):
+            for key, value in self._extract_value(['sessionAttributes']):
+                self.slots.__setattr__(key, value)
 
         # logger.setLevel(self.get_logger_level())
 
@@ -39,10 +47,10 @@ class LexEvent(_EventInterface):
         """
 
         action = {
-            "sessionAttributes": self.sessionAttributes,
+            "sessionAttributes": self.sessionAttributes.__dict__,
             "dialogAction": {
                 "type": "Delegate",
-                "slots": self.slots,
+                "slots": self.slots.__dict__,
             }
         }
         logger.info('Delegate response ->\r {}'.format(json.dumps(action)))
@@ -64,7 +72,7 @@ class LexEvent(_EventInterface):
         """
         self.set_slot(key_name=elicit_slot)
         action = {
-            "sessionAttributes": self.sessionAttributes,
+            "sessionAttributes": self.sessionAttributes.__dict__,
             "dialogAction": {
                 "type": "ElicitSlot",
                 "message": {
@@ -72,7 +80,7 @@ class LexEvent(_EventInterface):
                     "content": msg
                 },
                 "intentName": self.intentName,
-                "slots": self.slots,
+                "slots": self.slots.__dict__,
                 "slotToElicit": elicit_slot
             }
         }
@@ -93,7 +101,7 @@ class LexEvent(_EventInterface):
         """
 
         action = {
-            "sessionAttributes": self.sessionAttributes,
+            "sessionAttributes": self.sessionAttributes.__dict__,
             "dialogAction": {
                 "type": "ElicitIntent",
                 "message": {
@@ -110,11 +118,11 @@ class LexEvent(_EventInterface):
                                 msg_type='PlainText',
                                 reprompt_type='PlainText'):
         action = {
-            "sessionAttributes": self.sessionAttributes,
+            "sessionAttributes": self.sessionAttributes.__dict__,
             "dialogAction": {
                 "type": "ConfirmIntent",
                 "intentName": self.intentName,
-                "slots": self.slots,
+                "slots": self.slots.__dict__,
                 "message": {
                     "contentType": msg_type,
                     "content": msg
@@ -127,7 +135,7 @@ class LexEvent(_EventInterface):
     def close_response(self, msg, msg_type='PlainText', fulfilled=True):
         fulfilled_state = 'Fulfilled' if fulfilled else 'Failed'
         action = {
-            "sessionAttributes": self.sessionAttributes,
+            "sessionAttributes": self.sessionAttributes.__dict__,
             "dialogAction": {
                 "type": "Close",
                 "fulfillmentState": fulfilled_state,
