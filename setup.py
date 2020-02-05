@@ -2,12 +2,12 @@ import setuptools
 
 setuptools.setup(
     name='awsLexAlexa',
-    version='0.6',
+    version='0.9',
     author="David Martinez Martin",
     author_email="davidmtn@gmail.com",
     url="https://github.com/dmmop/awsLexAlexa",
-    packages=['awsLexAlexa/events', 'awsLexAlexa/logs'],
-    exclude=['test'],
+    packages=['awsLexAlexa', 'awsLexAlexa/events', 'awsLexAlexa/logs'],
+    # exclude=['test'],
     # include_package_data=True,
     license='GNU General Public License v3',
     long_description=open('README.md').read(),
